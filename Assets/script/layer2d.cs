@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class layer2d : MonoBehaviour {
+public class layer2d {
 
     int _width; // 幅
     int _height; // 高さ
