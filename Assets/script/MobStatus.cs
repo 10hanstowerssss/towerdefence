@@ -49,14 +49,8 @@ public class MobStatus : MonoBehaviour {
         agent = GetComponent<NavMeshAgent>();
         agent.updateRotation = false;
         agent.destination = Goal.position;
+        Init();//あとで変えろよ
 	}
-    /// <summary>
-    /// ダメージ計算
-    /// </summary>
-    void Damage()
-    {
-        //_hp = Mathf.Max(0, HP - DAMAGE());
-    }
     int lvHP;
     public int LVHP
     {
@@ -113,6 +107,20 @@ public class MobStatus : MonoBehaviour {
             //agent.Stop();
         }
         if (collider.gameObject.tag == "Enemy")
+        {
+            enemy e = collider.gameObject.GetComponent<enemy>();
+            Damage(e.EnemyATK);
+            
+        }
+    }
+    /// <summary>
+    /// ダメージ計算
+    /// </summary>
+    /// <param name="val"></param>
+    void Damage(int val)
+    {
+        _hp -= val;
+        if (_hp <= 0)
         {
             Destroy(this.gameObject);
         }

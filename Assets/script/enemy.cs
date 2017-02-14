@@ -6,6 +6,8 @@ public class enemy : MonoBehaviour {
     int _hp;
     int _atk;
     int _range;
+    float firerate;//攻撃速度
+    float Tfirerate;//攻撃速度インターバル
     /// <summary>
     /// 体力
     /// </summary>
@@ -35,6 +37,35 @@ public class enemy : MonoBehaviour {
         agent = GetComponent<NavMeshAgent>();
         agent.updateRotation = false;
         agent.destination = Goal.position;
+        Init();//あとで変えろよ
+    }
+    int lvHP;
+    public int LVHP
+    {
+        get { return lvHP; }
+    }
+    int lvAtk;
+    public int LVATK
+    {
+        get { return lvAtk; }
+    }
+    void UpgradeStatus()
+    {
+        _hp = Parameter.HitPoint(lvHP);
+        _atk = Parameter.Attack(lvAtk);
+    }
+    /// <summary>
+    /// 初期化
+    /// </summary>
+    void Init()
+    {
+        //インターバル初期化
+        Tfirerate = 0;
+        //ステータス初期化
+        lvHP = 1;
+        lvAtk = 1;
+        //ステータス更新
+        UpgradeStatus();
     }
     void OnTriggerEnter(Collider collider)
     {
@@ -44,6 +75,15 @@ public class enemy : MonoBehaviour {
             //agent.Stop();
         }
         if (collider.gameObject.tag == "Playermob")
+        {
+            MobStatus m = collider.gameObject.GetComponent<MobStatus>();
+            Damages(m.ATK);
+        }
+    }
+    void Damages(int val)
+    {
+        _hp -= val;
+        if (_hp <= 0)
         {
             Destroy(this.gameObject);
         }
