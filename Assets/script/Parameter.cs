@@ -12,4 +12,8 @@ public class Parameter {
     {
         return 5 + (2 * lv);
     }
+    public static int Speed(int lv)
+    {
+        return 1 * lv;
+    }
 }

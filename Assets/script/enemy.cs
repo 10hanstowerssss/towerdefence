@@ -29,14 +29,26 @@ public class enemy : MonoBehaviour {
     {
         get { return _range; }
     }
-
+    int _speed;
+    /// <summary>
+    /// 移動速度
+    /// </summary>
+    public int EnemySPEED
+    {
+        get { return _speed; }
+    }
+    public Transform START;
     public Transform Goal;
+    private float starttime;
+    private float distance;//2点間の距離
     private NavMeshAgent agent;
     void Start()
     {
-        agent = GetComponent<NavMeshAgent>();
-        agent.updateRotation = false;
-        agent.destination = Goal.position;
+        starttime = Time.time;
+        distance = Vector3.Distance(START.position, Goal.position);
+        //agent = GetComponent<NavMeshAgent>();
+        //agent.updateRotation = false;
+        //agent.destination = Goal.position;
         Init();//あとで変えろよ
     }
     int lvHP;
@@ -49,10 +61,16 @@ public class enemy : MonoBehaviour {
     {
         get { return lvAtk; }
     }
+    int lvspeed;
+    public int LVSPEED
+    {
+        get { return lvspeed; }
+    }
     void UpgradeStatus()
     {
         _hp = Parameter.HitPoint(lvHP);
         _atk = Parameter.Attack(lvAtk);
+        _speed = Parameter.Speed(lvspeed);
     }
     /// <summary>
     /// 初期化
@@ -64,8 +82,20 @@ public class enemy : MonoBehaviour {
         //ステータス初期化
         lvHP = 1;
         lvAtk = 1;
+        lvspeed = 1;
         //ステータス更新
         UpgradeStatus();
+    }
+    private float discovered;
+    private float frac;
+    void Update()
+    {
+        Tfirerate += Time.deltaTime;
+        discovered = (Time.time - starttime) * _speed;
+        frac = discovered / distance;
+        transform.position = Vector3.Lerp(START.position, Goal.position, frac);
+        //インターバル
+        Tfirerate = 0;
     }
     void OnTriggerEnter(Collider collider)
     {
