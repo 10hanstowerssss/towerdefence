@@ -1,8 +1,26 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class MobStatus : MonoBehaviour {
+public class MinionStatus : MonoBehaviour {
 
+    //public static Type CreateInstance<Type>(GameObject prefab,Vector3 p, float direction=0.0f,float speeds=0.0f) where Type : MinionStatus
+    //{
+    //    GameObject gg = Instantiate(prefab, p, Quaternion.identity) as GameObject;
+    //    Type obj = gg.GetComponent<Type>();
+    //    //obj.SetVelocity(direction, speeds);
+    //    return obj;
+    //}
+    /// <summary>
+    /// ミニオンクラス
+    /// </summary>
+    public job Job;
+    public enum job
+    {
+        Swordman,
+        Archer,
+        Superminion,
+        k
+    }
     public enum Upgrade
     {
         LevelUP,
@@ -50,6 +68,7 @@ public class MobStatus : MonoBehaviour {
     {
         get { return _speed; }
     }
+    private GameObject nearobj;
     public Transform START;
     public Transform Goal;
     private float starttime;
@@ -60,6 +79,7 @@ public class MobStatus : MonoBehaviour {
 	void Start () {
         starttime = Time.time;
         distance = Vector3.Distance(START.position, Goal.position);
+        //nearobj = searchTag(gameObject,"enemy");
         //agent = GetComponent<NavMeshAgent>();
         //agent.updateRotation = false;
         //agent.destination = Goal.position;
@@ -82,9 +102,19 @@ public class MobStatus : MonoBehaviour {
     }
     void UpgradeStatus()
     {
-        _hp = Parameter.HitPoint(lvHP);
-        _atk = Parameter.Attack(lvAtk);
-        _speed = Parameter.Speed(lvspeed);
+        if (Job == job.Swordman)
+        {
+            _hp = Parameter.HitPoint(lvHP);
+            _atk = Parameter.Attack(lvAtk);
+            _speed = Parameter.Speed(lvspeed);
+        }
+        if (Job == job.Archer)
+        {
+            _hp = Parameter.LongRangeHP(lvHP);
+            _atk = Parameter.LongRangeATK(lvAtk);
+            _range = Parameter.Range(LVATK);
+            _speed = Parameter.Speed(lvspeed);
+        }
     }
     /// <summary>
     /// 初期化
@@ -106,9 +136,9 @@ public class MobStatus : MonoBehaviour {
     
     void Update()
     {
+        Tfirerate += Time.deltaTime;
         if (walk == true&&attack==false)
         {
-            Tfirerate += Time.deltaTime;
             discovered = (Time.time - starttime) * _speed;
             frac = discovered / distance;
             transform.position = Vector3.Lerp(START.position, Goal.position, frac);
@@ -149,7 +179,7 @@ public class MobStatus : MonoBehaviour {
             //attack = true;
             enemy e = collider.gameObject.GetComponent<enemy>();
             Damage(e.EnemyATK);
-            
+            //Shot.Add(ATK);
         }
     }
     /// <summary>
@@ -164,4 +194,26 @@ public class MobStatus : MonoBehaviour {
             Destroy(this.gameObject);
         }
     }
+    /// <summary>
+    /// 近い敵を探す
+    /// </summary>
+    /// <param name="objc"></param>
+    /// <param name="Tagname"></param>
+    /// <returns></returns>
+    //GameObject searchTag(GameObject objc,string Tagname)
+    //{
+    //    float tmpdis = 0;
+    //    float neardis = 0;
+    //    GameObject target = null;
+    //    foreach (GameObject ob in GameObject.FindGameObjectsWithTag(Tagname)) 
+    //    {
+    //        tmpdis = Vector3.Distance(ob.transform.position, objc.transform.position);
+    //        if (neardis == 0 || neardis > tmpdis)
+    //        {
+    //            neardis = tmpdis;
+    //            target = ob;
+    //        }
+    //    }
+    //    return target;
+    //}
 }

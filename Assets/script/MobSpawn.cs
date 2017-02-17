@@ -14,6 +14,7 @@ public class MobSpawn : MonoBehaviour {
         if (control == null)
         {
             control = GetComponent<Control>();
+            money = control.Money;
         }
 	}
 	
@@ -22,11 +23,6 @@ public class MobSpawn : MonoBehaviour {
 	}
     public void Spawn()
     {
-        money = control.Money;
-        if (money >= 5)
-        {
-            //Money -= 5;
-            Instantiate(Soldier, Spawnpoint.transform.position, Quaternion.identity);
-        }
+        Instantiate(Soldier, Spawnpoint.transform.position, Quaternion.identity);
     }
 }

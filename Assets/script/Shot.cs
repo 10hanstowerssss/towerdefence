@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Shot : MonoBehaviour {
+public class Shot  {
 
-    public GameObject Weapon;
+    //public GameObject Weapon;
     public Transform positions;
     public float Speed = 100;
     public static Shot Add(int damage)
@@ -11,6 +11,7 @@ public class Shot : MonoBehaviour {
         Shot s=new Shot();
         if (s == null)
         {
+            //Debug.Log("無理ｗ");
             return null;
         }
         s.Init(damage);

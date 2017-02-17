@@ -41,11 +41,15 @@ public class enemy : MonoBehaviour {
     public Transform Goal;
     private float starttime;
     private float distance;//2点間の距離
+    private bool walk;//歩行可能状態かどうか
+    private bool attack;//攻撃中かどうか
     private NavMeshAgent agent;
+    Control control;
     void Start()
     {
         starttime = Time.time;
         distance = Vector3.Distance(START.position, Goal.position);
+        control = GameObject.FindGameObjectWithTag("Control").GetComponent<Control>();
         //agent = GetComponent<NavMeshAgent>();
         //agent.updateRotation = false;
         //agent.destination = Goal.position;
@@ -83,6 +87,7 @@ public class enemy : MonoBehaviour {
         lvHP = 1;
         lvAtk = 1;
         lvspeed = 1;
+        walk = true;
         //ステータス更新
         UpgradeStatus();
     }
@@ -91,9 +96,12 @@ public class enemy : MonoBehaviour {
     void Update()
     {
         Tfirerate += Time.deltaTime;
-        discovered = (Time.time - starttime) * _speed;
-        frac = discovered / distance;
-        transform.position = Vector3.Lerp(START.position, Goal.position, frac);
+        if (walk == true && attack == false)
+        {
+            discovered = (Time.time - starttime) * _speed;
+            frac = discovered / distance;
+            transform.position = Vector3.Lerp(START.position, Goal.position, frac);
+        }
         //インターバル
         Tfirerate = 0;
     }
@@ -106,7 +114,7 @@ public class enemy : MonoBehaviour {
         }
         if (collider.gameObject.tag == "Playermob")
         {
-            MobStatus m = collider.gameObject.GetComponent<MobStatus>();
+            MinionStatus m = collider.gameObject.GetComponent<MinionStatus>();
             Damages(m.ATK);
         }
     }
