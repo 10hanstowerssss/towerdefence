@@ -7,6 +7,16 @@ public class MobSpawn : MonoBehaviour {
     Control control;
     public GameObject Spawnpoint;
     private GameObject Soldier;
+    //private static MobSpawn _instance;
+    //public static MobSpawn Instance
+    //{
+    //    get
+    //    {
+    //        // シーン上からオブジェクトプールを取得して返す
+    //        _instance = FindObjectOfType<MobSpawn>();
+    //        return _instance;
+    //    }
+    //}
     //private GameObject Archer;
     //private GameObject Gunner;
 	void Start () {

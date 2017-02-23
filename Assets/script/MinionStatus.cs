@@ -104,16 +104,16 @@ public class MinionStatus : MonoBehaviour {
     {
         if (Job == job.Swordman)
         {
-            _hp = Parameter.HitPoint(lvHP);
-            _atk = Parameter.Attack(lvAtk);
-            _speed = Parameter.Speed(lvspeed);
+            _hp = Parameter.HitPoint(LVHP);
+            _atk = Parameter.Attack(LVATK);
+            _speed = Parameter.Speed(LVSPEED);
         }
         if (Job == job.Archer)
         {
-            _hp = Parameter.LongRangeHP(lvHP);
-            _atk = Parameter.LongRangeATK(lvAtk);
-            _range = Parameter.Range(LVATK);
-            _speed = Parameter.Speed(lvspeed);
+            _hp = Parameter.LongRangeHP(LVHP);
+            _atk = Parameter.LongRangeATK(LVATK);
+            _range = Parameter.Range(LVSPEED);
+            _speed = Parameter.Speed(LVSPEED);
         }
     }
     /// <summary>

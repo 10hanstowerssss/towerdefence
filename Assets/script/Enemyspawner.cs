@@ -5,6 +5,7 @@ public class Enemyspawner : MonoBehaviour {
 
     public GameObject Spawnpoint;
     private GameObject Soldier;
+    enemy es;
     //private GameObject Archer;
     //private GameObject Gunner;
 	void Start () {
