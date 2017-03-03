@@ -10,6 +10,7 @@ public class MinionStatus : MonoBehaviour {
     //    //obj.SetVelocity(direction, speeds);
     //    return obj;
     //}
+    Control cc;
     /// <summary>
     /// ミニオンクラス
     /// </summary>
@@ -68,6 +69,15 @@ public class MinionStatus : MonoBehaviour {
     {
         get { return _speed; }
     }
+    int _cost;
+    /// <summary>
+    /// コスト
+    /// </summary>
+    public int COST
+    {
+        get { return _cost; }
+        set { _cost = value; }
+    }
     private GameObject nearobj;
     public Transform START;
     public Transform Goal;
@@ -107,6 +117,7 @@ public class MinionStatus : MonoBehaviour {
             _hp = Parameter.HitPoint(LVHP);
             _atk = Parameter.Attack(LVATK);
             _speed = Parameter.Speed(LVSPEED);
+            _cost = Parameter.Cost(lvHP);
         }
         if (Job == job.Archer)
         {
@@ -179,6 +190,11 @@ public class MinionStatus : MonoBehaviour {
             //attack = true;
             enemy e = collider.gameObject.GetComponent<enemy>();
             Damage(e.EnemyATK);
+            if (e.EnemyHP <= 0)
+            {
+                Control.Enemykill();
+            }
+            //DestroyImmediate(collider);
             //Shot.Add(ATK);
         }
     }

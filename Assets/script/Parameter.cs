@@ -16,6 +16,10 @@ public class Parameter {
     {
         return 1 * lv;
     }
+    public static int Cost(int lv)
+    {
+        return 3;
+    }
     public static int LongRangeHP(int lv)
     {
         return 10 + (3 * lv);

@@ -8,6 +8,14 @@ public class enemy : MonoBehaviour {
     int _range;
     float firerate;//攻撃速度
     float Tfirerate;//攻撃速度インターバル
+    public job Job;
+    public enum job
+    {
+        Swordman,
+        Archer,
+        Superminion,
+        k
+    }
     /// <summary>
     /// 体力
     /// </summary>

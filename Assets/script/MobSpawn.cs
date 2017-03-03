@@ -24,7 +24,7 @@ public class MobSpawn : MonoBehaviour {
         if (control == null)
         {
             control = GetComponent<Control>();
-            money = control.Money;
+            money = Control.Money;
         }
 	}
 	

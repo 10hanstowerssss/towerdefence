@@ -13,6 +13,7 @@ public class Control : MonoBehaviour
     }
     private bool pause;
     private float times;
+    public Text texted;
     style Style;
     /// <summary>
     /// 戦闘態勢
@@ -22,19 +23,24 @@ public class Control : MonoBehaviour
         Defensive,
         Offensive,
         Normal,
+        MAX,
     }
-    int _money;
+    static int _money;
     /// <summary>
     /// 所持金
     /// </summary>
-    public int Money
+    public static int Money
     {
         get { return _money; }
+        set { _money += value; }
     }
     void Start()
     {
+        DontDestroyOnLoad(gameObject);
         _money = 20;
+        _plusmoney = 1;
         _TacticsGauge = 30;
+        texted.text = "資金: 0";
         _slider = GameObject.Find("TacticalGauge").GetComponent<Slider>();
         spawns = GetComponent<MobSpawn>();
         Style = style.Normal;
@@ -76,6 +82,14 @@ public class Control : MonoBehaviour
             Style = style.Offensive;
             BattleStyle(Style);
         }
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (TacticsGauge == 100)
+            {
+                OnSpecialSkill();
+            }
+        }
+        Style = style.Normal;
     }
     private IEnumerator PlayControl(string s, int i)
     {
@@ -86,6 +100,7 @@ public class Control : MonoBehaviour
                 {
                     spawns.Spawn();
                     _money -= 5;
+                    texted.text = "資金: " + Money.ToString();
                 }
                 break;
             case "Archer":
@@ -104,12 +119,23 @@ public class Control : MonoBehaviour
             //GetComponent<Text>().text = (Money).ToString();
         }
     }
+    int _plusmoney;
+    public int Plusmoney
+    {
+        get { return _plusmoney; }
+        set { _plusmoney += value; }
+    }
     void TimetoMoney()
     {
         if (pause == false)
         {
-            _money++;
+            _money+=Plusmoney;
         }
+        texted.text = "資金: " + Money.ToString();
+    }
+    public static void Enemykill()
+    {
+        _money += 2;
     }
     public void OnUnit1()
     {
@@ -133,9 +159,9 @@ public class Control : MonoBehaviour
     }
     public void OnSpecialSkill()
     {
-        if (TacticsGauge == 100)
+        while (TacticsGauge >= 0)
         {
-
+            _TacticsGauge--;
         }
     }
     public void BattleStyle(style _styletype)
@@ -159,6 +185,8 @@ public class Control : MonoBehaviour
                     _TacticsGauge = 100;
                 }
                 _slider.value = TacticsGauge;
+                break;
+            case style.MAX:
                 break;
         }
     }
