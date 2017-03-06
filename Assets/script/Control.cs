@@ -105,6 +105,14 @@ public class Control : MonoBehaviour
                 break;
             case "Archer":
                 break;
+            case "Magic":
+                if(_money>=7)
+                {
+                    spawns.SpawnMagicUser();
+                    _money -= 7;
+                    texted.text = "資金: " + Money.ToString();
+                }
+                break;
             case "Lancer":
                 break;
         }
@@ -135,7 +143,7 @@ public class Control : MonoBehaviour
     }
     public static void Enemykill()
     {
-        _money += 2;
+        _money += 3;
     }
     public void OnUnit1()
     {
@@ -147,7 +155,7 @@ public class Control : MonoBehaviour
     }
     public void OnUnit3()
     {
-
+        StartCoroutine(PlayControl("Magic", 1));
     }
     public void OnUnit4()
     {

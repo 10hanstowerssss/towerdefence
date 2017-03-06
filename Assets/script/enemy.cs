@@ -122,8 +122,15 @@ public class enemy : MonoBehaviour {
         }
         if (collider.gameObject.tag == "Playermob")
         {
+            walk = false;
+            attack = true;
             MinionStatus m = collider.gameObject.GetComponent<MinionStatus>();
             Damages(m.ATK);
+            if(m.HP <= 0)
+            {
+                walk = true;
+                attack = false;
+            }
         }
     }
     void Damages(int val)

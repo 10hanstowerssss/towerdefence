@@ -32,4 +32,12 @@ public class Parameter {
     {
         return 1 * lv;
     }
+    public static int MagicUserHP(int lv)
+    {
+        return 7 + (3 * lv);
+    }
+    public static int MagicUserATK(int lv)
+    {
+        return 5 + (3 * lv);
+    }
 }

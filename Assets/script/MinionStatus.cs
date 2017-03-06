@@ -10,6 +10,11 @@ public class MinionStatus : MonoBehaviour {
     //    //obj.SetVelocity(direction, speeds);
     //    return obj;
     //}
+    BoxCollider _boxcollider = null;
+    public BoxCollider BOXcollider
+    {
+        get { return _boxcollider ?? (_boxcollider = gameObject.GetComponent<BoxCollider>()); }
+    }
     Control cc;
     /// <summary>
     /// ミニオンクラス
@@ -19,9 +24,18 @@ public class MinionStatus : MonoBehaviour {
     {
         Swordman,
         Archer,
+        Magic,
         Superminion,
         k
     }
+    //状態
+    enum State
+    {
+        Walking,
+        Attacking,
+    }
+    State state = State.Walking;
+    State nextstate = State.Walking;
     public enum Upgrade
     {
         LevelUP,
@@ -83,11 +97,11 @@ public class MinionStatus : MonoBehaviour {
     public Transform Goal;
     private float starttime;
     private float distance;//2点間の距離
-    private bool walk;//歩行可能状態かどうか
-    private bool attack;//攻撃中かどうか
     private NavMeshAgent agent;
-	void Start () {
+    private GameObject _Range;
+    void Start () {
         starttime = Time.time;
+        _Range = transform.FindChild("range").gameObject;
         distance = Vector3.Distance(START.position, Goal.position);
         //nearobj = searchTag(gameObject,"enemy");
         //agent = GetComponent<NavMeshAgent>();
@@ -126,6 +140,12 @@ public class MinionStatus : MonoBehaviour {
             _range = Parameter.Range(LVSPEED);
             _speed = Parameter.Speed(LVSPEED);
         }
+        if (Job == job.Magic)
+        {
+            _hp = Parameter.MagicUserHP(LVHP);
+            _atk = Parameter.MagicUserATK(LVATK);
+            _speed = Parameter.Speed(LVSPEED);
+        }
     }
     /// <summary>
     /// 初期化
@@ -138,7 +158,7 @@ public class MinionStatus : MonoBehaviour {
         lvHP = 1;
         lvAtk = 1;
         lvspeed = 1;
-        walk = true;
+        state = State.Walking;
         //ステータス更新
         UpgradeStatus();
     }
@@ -148,18 +168,31 @@ public class MinionStatus : MonoBehaviour {
     void Update()
     {
         Tfirerate += Time.deltaTime;
-        if (walk == true&&attack==false)
+        switch (state)
         {
-            discovered = (Time.time - starttime) * _speed;
-            frac = discovered / distance;
-            transform.position = Vector3.Lerp(START.position, Goal.position, frac);
+            case State.Walking:
+                WALKING();
+                break;
+            case State.Attacking:
+                AttackinG();
+                break;
         }
-        if(Tfirerate< firerate)
+        if (Tfirerate< firerate)
         {
             return;
         }
         //インターバル
         Tfirerate = 0;
+    }
+    void WALKING()
+    {
+        discovered = (Time.time - starttime) * _speed;
+        frac = discovered / distance;
+        transform.position = Vector3.Lerp(START.position, Goal.position, frac);
+    }
+    void AttackinG()
+    {
+
     }
     public void Upgrades(Upgrade type)
     {
@@ -179,20 +212,20 @@ public class MinionStatus : MonoBehaviour {
     /// <param name="collider">当たった物体</param>
     void OnTriggerEnter(Collider collider)
     {
-        if(collider.gameObject.tag=="Tower")
+        if(collider.gameObject.tag=="EnemyTower")
         {
             Destroy(this.gameObject);
             //agent.Stop();
         }
         if (collider.gameObject.tag == "Enemy")
         {
-            //walk = false;
-            //attack = true;
+            state = State.Attacking;
             enemy e = collider.gameObject.GetComponent<enemy>();
             Damage(e.EnemyATK);
             if (e.EnemyHP <= 0)
             {
                 Control.Enemykill();
+                state = State.Walking;
             }
             //DestroyImmediate(collider);
             //Shot.Add(ATK);

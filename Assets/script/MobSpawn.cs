@@ -7,6 +7,7 @@ public class MobSpawn : MonoBehaviour {
     Control control;
     public GameObject Spawnpoint;
     private GameObject Soldier;
+    private GameObject MagicUser;
     //private static MobSpawn _instance;
     //public static MobSpawn Instance
     //{
@@ -21,6 +22,7 @@ public class MobSpawn : MonoBehaviour {
     //private GameObject Gunner;
 	void Start () {
         Soldier = (GameObject)Resources.Load("Prefab/mob");
+        MagicUser = (GameObject)Resources.Load("Prefab/magic");
         if (control == null)
         {
             control = GetComponent<Control>();
@@ -34,5 +36,9 @@ public class MobSpawn : MonoBehaviour {
     public void Spawn()
     {
         Instantiate(Soldier, Spawnpoint.transform.position, Quaternion.identity);
+    }
+    public void SpawnMagicUser()
+    {
+        Instantiate(MagicUser, Spawnpoint.transform.position, Quaternion.identity);
     }
 }

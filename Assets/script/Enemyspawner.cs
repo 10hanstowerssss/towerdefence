@@ -10,7 +10,7 @@ public class Enemyspawner : MonoBehaviour {
     //private GameObject Gunner;
 	void Start () {
         Soldier = (GameObject)Resources.Load("Prefab/Enemy");
-        InvokeRepeating("Spawn", 3.0f,3.0f);
+        InvokeRepeating("Spawn", 4.0f,4.0f);
 	}
 	
 	// Update is called once per frame
