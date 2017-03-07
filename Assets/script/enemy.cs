@@ -16,6 +16,12 @@ public class enemy : MonoBehaviour {
         Superminion,
         k
     }
+    enum State
+    {
+        Walking,
+        Attacking,
+    }
+    State state = State.Walking;
     /// <summary>
     /// 体力
     /// </summary>
@@ -57,7 +63,7 @@ public class enemy : MonoBehaviour {
     {
         starttime = Time.time;
         distance = Vector3.Distance(START.position, Goal.position);
-        control = GameObject.FindGameObjectWithTag("Control").GetComponent<Control>();
+        //control = GameObject.FindGameObjectWithTag("Control").GetComponent<Control>();
         //agent = GetComponent<NavMeshAgent>();
         //agent.updateRotation = false;
         //agent.destination = Goal.position;
@@ -112,6 +118,24 @@ public class enemy : MonoBehaviour {
         }
         //インターバル
         Tfirerate = 0;
+    }
+    void WALKING()
+    {
+        //if (START = null)
+        //{
+        //    START.position = gameObject.transform.position;
+        //}
+        discovered = (Time.time - starttime) * EnemySPEED;
+        frac = discovered / distance;
+        transform.position = Vector3.Lerp(START.position, Goal.position, frac);
+        //if (Target)
+        //{
+        //    state = State.Attacking;
+        //}
+    }
+    void AttackinG()
+    {
+        return;
     }
     void OnTriggerEnter(Collider collider)
     {

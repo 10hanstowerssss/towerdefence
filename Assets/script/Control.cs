@@ -163,7 +163,7 @@ public class Control : MonoBehaviour
     }
     public void OnUnit5()
     {
-
+        Time.timeScale = 0;
     }
     public void OnSpecialSkill()
     {
