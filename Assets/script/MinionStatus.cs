@@ -3,19 +3,13 @@ using System.Collections;
 
 public class MinionStatus : MonoBehaviour {
 
-    //public static Type CreateInstance<Type>(GameObject prefab,Vector3 p, float direction=0.0f,float speeds=0.0f) where Type : MinionStatus
+    //BoxCollider _boxcollider = null;
+    //public BoxCollider BOXcollider
     //{
-    //    GameObject gg = Instantiate(prefab, p, Quaternion.identity) as GameObject;
-    //    Type obj = gg.GetComponent<Type>();
-    //    //obj.SetVelocity(direction, speeds);
-    //    return obj;
+    //    get { return _boxcollider ?? (_boxcollider = gameObject.GetComponent<BoxCollider>()); }
     //}
-    BoxCollider _boxcollider = null;
-    public BoxCollider BOXcollider
-    {
-        get { return _boxcollider ?? (_boxcollider = gameObject.GetComponent<BoxCollider>()); }
-    }
     Control cc;
+    Transform Target;
     /// <summary>
     /// ミニオンクラス
     /// </summary>
@@ -28,6 +22,7 @@ public class MinionStatus : MonoBehaviour {
         Superminion,
         k
     }
+    private GameObject bullet;
     //状態
     enum State
     {
@@ -99,10 +94,24 @@ public class MinionStatus : MonoBehaviour {
     private float distance;//2点間の距離
     private NavMeshAgent agent;
     private GameObject _Range;
+    CircleCollider2D Circlecollider;
     void Start () {
         starttime = Time.time;
-        _Range = transform.FindChild("range").gameObject;
         distance = Vector3.Distance(START.position, Goal.position);
+        _Range = transform.FindChild("range").gameObject;
+        Circlecollider = _Range.GetComponent<CircleCollider2D>();
+        switch (Job)
+        {
+            case job.Swordman:
+                bullet = null;
+                break;
+            case job.Archer:
+                bullet = (GameObject)Resources.Load("magicbullet");
+                break;
+            case job.Magic:
+                bullet = (GameObject)Resources.Load("magicbullet");
+                break;
+        }
         //nearobj = searchTag(gameObject,"enemy");
         //agent = GetComponent<NavMeshAgent>();
         //agent.updateRotation = false;
@@ -126,25 +135,25 @@ public class MinionStatus : MonoBehaviour {
     }
     void UpgradeStatus()
     {
-        if (Job == job.Swordman)
+        switch (Job)
         {
-            _hp = Parameter.HitPoint(LVHP);
-            _atk = Parameter.Attack(LVATK);
-            _speed = Parameter.Speed(LVSPEED);
-            _cost = Parameter.Cost(lvHP);
-        }
-        if (Job == job.Archer)
-        {
-            _hp = Parameter.LongRangeHP(LVHP);
-            _atk = Parameter.LongRangeATK(LVATK);
-            _range = Parameter.Range(LVSPEED);
-            _speed = Parameter.Speed(LVSPEED);
-        }
-        if (Job == job.Magic)
-        {
-            _hp = Parameter.MagicUserHP(LVHP);
-            _atk = Parameter.MagicUserATK(LVATK);
-            _speed = Parameter.Speed(LVSPEED);
+            case job.Swordman:
+                _hp = Parameter.HitPoint(LVHP);
+                _atk = Parameter.Attack(LVATK);
+                _speed = Parameter.Speed(LVSPEED);
+                _cost = Parameter.Cost(lvHP);
+                break;
+            case job.Archer:
+                _hp = Parameter.LongRangeHP(LVHP);
+                _atk = Parameter.LongRangeATK(LVATK);
+                _range = Parameter.Range(LVSPEED);
+                _speed = Parameter.Speed(LVSPEED);
+                break;
+            case job.Magic:
+                _hp = Parameter.MagicUserHP(LVHP);
+                _atk = Parameter.MagicUserATK(LVATK);
+                _speed = Parameter.Speed(LVSPEED);
+                break;
         }
     }
     /// <summary>
@@ -186,13 +195,21 @@ public class MinionStatus : MonoBehaviour {
     }
     void WALKING()
     {
-        discovered = (Time.time - starttime) * _speed;
+        //if (START = null)
+        //{
+        //    START.position = gameObject.transform.position;
+        //}
+        discovered = (Time.time - starttime) * SPEED;
         frac = discovered / distance;
         transform.position = Vector3.Lerp(START.position, Goal.position, frac);
+        //if (Target)
+        //{
+        //    state = State.Attacking;
+        //}
     }
     void AttackinG()
     {
-
+        return;
     }
     public void Upgrades(Upgrade type)
     {
@@ -210,10 +227,12 @@ public class MinionStatus : MonoBehaviour {
     /// 当たり判定
     /// </summary>
     /// <param name="collider">当たった物体</param>
-    void OnTriggerEnter(Collider collider)
+     void OnTriggerEnter(Collider collider)
     {
         if(collider.gameObject.tag=="EnemyTower")
         {
+            tower t = collider.gameObject.GetComponent<tower>();
+            Damage(t.ATK);
             Destroy(this.gameObject);
             //agent.Stop();
         }
@@ -231,11 +250,35 @@ public class MinionStatus : MonoBehaviour {
             //Shot.Add(ATK);
         }
     }
-    /// <summary>
-    /// ダメージ計算
-    /// </summary>
-    /// <param name="val"></param>
-    void Damage(int val)
+    public void rangeTriggerEnter(Collider collider)
+    {
+        Debug.Log("hanni");
+    }
+    public void SetAttackTarget(Transform target)
+    {
+        //RaycastHit hit;
+
+        //if (Physics.Raycast(transform.position, Vector3.right, out hit, 10))
+        //{
+        //    if(hit.collider.tag == "Enemy")
+        //    {
+        //        state = State.Attacking;
+        //    }
+        // Target=null;
+        //}
+
+    }
+    private IEnumerator SHOT(float Interval)
+    {
+        GameObject b = Instantiate(bullet, transform.position, transform.rotation) as GameObject;
+        //b.GetComponent<Bullet>().target = target;
+        yield return new WaitForSeconds(Interval);
+    }
+/// <summary>
+/// ダメージ計算
+/// </summary>
+/// <param name="val"></param>
+void Damage(int val)
     {
         _hp -= val;
         if (_hp <= 0)
