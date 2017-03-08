@@ -8,6 +8,8 @@ public class MobSpawn : MonoBehaviour {
     public GameObject Spawnpoint;
     private GameObject Soldier;
     private GameObject MagicUser;
+    //public Camera camera;
+    
     //private static MobSpawn _instance;
     //public static MobSpawn Instance
     //{
@@ -28,6 +30,8 @@ public class MobSpawn : MonoBehaviour {
             control = GetComponent<Control>();
             money = Control.Money;
         }
+        //RaycastHit hit;
+        //Ray ray = camera.ScreenPointToRay(Input.mousePosition);
 	}
 	
 	void Update () {
@@ -40,5 +44,9 @@ public class MobSpawn : MonoBehaviour {
     public void SpawnMagicUser()
     {
         Instantiate(MagicUser, Spawnpoint.transform.position, Quaternion.identity);
+    }
+    public void Onchangepoint()
+    {
+
     }
 }

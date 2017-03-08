@@ -32,9 +32,9 @@ public class tower : MonoBehaviour {
 	void Update () {
 	
 	}
-    void OnTrrigerEnter(Collider collider)
+    void OnTriggerEnter(Collider collider)
     {
-        if (collider.gameObject.tag == "playermob")
+        if (collider.gameObject.tag == "Playermob")
         {
             MinionStatus m = collider.gameObject.GetComponent<MinionStatus>();
             Damages(m.ATK);
@@ -45,11 +45,11 @@ public class tower : MonoBehaviour {
         _hp -= val;
         if (_hp <= 0)
         {
-            foreach (Transform explosionPos in explosionPoints)
-            {
-                GameObject expl = Instantiate(explosion, explosionPos.position, transform.rotation) as GameObject;
-                Destroy(expl, 5f);
-            }
+            //foreach (Transform explosionPos in explosionPoints)
+            //{
+            //    GameObject expl = Instantiate(explosion, explosionPos.position, transform.rotation) as GameObject;
+            //    Destroy(expl, 5f);
+            //}
             Destroy(this.gameObject);
         }
     }

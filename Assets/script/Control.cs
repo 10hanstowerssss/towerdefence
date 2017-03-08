@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class Control : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class Control : MonoBehaviour
     private bool pause;
     private float times;
     public Text texted;
+    public GameObject TOWER;
+    tower tt;
     style Style;
     /// <summary>
     /// 戦闘態勢
@@ -36,7 +39,7 @@ public class Control : MonoBehaviour
     }
     void Start()
     {
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
         _money = 20;
         _plusmoney = 1;
         _TacticsGauge = 30;
@@ -46,6 +49,8 @@ public class Control : MonoBehaviour
         Style = style.Normal;
         _slider.value = TacticsGauge;
         pause = false;
+        tt=TOWER.GetComponent<tower>();
+        times = 0;
         //StartCoroutine(Loop());
         //GetComponent<Text>().text = (Money).ToString();
     }
@@ -64,6 +69,10 @@ public class Control : MonoBehaviour
         if (Style == style.Offensive || Style == style.Defensive)
         {
             Style = style.Normal;
+        }
+        if (tt.HP <= 0)
+        {
+            Invoke("TITLE", 3);
         }
     }
     void KeyInput()
@@ -197,6 +206,10 @@ public class Control : MonoBehaviour
             case style.MAX:
                 break;
         }
+    }
+    void TITLE()
+    {
+        SceneManager.LoadScene("Title");
     }
     private bool gamespeed;
     public void GameSpeed()

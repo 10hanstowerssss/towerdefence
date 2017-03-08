@@ -156,6 +156,11 @@ public class enemy : MonoBehaviour {
                 attack = false;
             }
         }
+        if (collider.GetComponent<bullet>())
+        {
+            bullet b = collider.GetComponent<bullet>();
+            Damages(b.Damagee);
+        }
     }
     void Damages(int val)
     {

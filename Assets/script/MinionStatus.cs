@@ -28,6 +28,7 @@ public class MinionStatus : MonoBehaviour {
     {
         Walking,
         Attacking,
+        Waiting,
     }
     State state = State.Walking;
     State nextstate = State.Walking;
@@ -106,10 +107,10 @@ public class MinionStatus : MonoBehaviour {
                 bullet = null;
                 break;
             case job.Archer:
-                bullet = (GameObject)Resources.Load("magicbullet");
+                bullet = (GameObject)Resources.Load("Prefab/magicbullet");
                 break;
             case job.Magic:
-                bullet = (GameObject)Resources.Load("magicbullet");
+                bullet = (GameObject)Resources.Load("Prefab/magicbullet");
                 break;
         }
         //nearobj = searchTag(gameObject,"enemy");
@@ -185,7 +186,10 @@ public class MinionStatus : MonoBehaviour {
             case State.Attacking:
                 AttackinG();
                 break;
+            case State.Waiting:
+                break;
         }
+        //SetAttackTarget();
         if (Tfirerate< firerate)
         {
             return;
@@ -209,6 +213,18 @@ public class MinionStatus : MonoBehaviour {
     }
     void AttackinG()
     {
+        switch (Job)
+        {
+            case job.Swordman:
+                break;
+            case job.Archer:
+                //SHOT(Tfirerate);
+                break;
+            case job.Magic:
+                SHOT(1.0f);
+                break;
+        }
+        //SHOT(Tfirerate);
         return;
     }
     public void Upgrades(Upgrade type)
@@ -249,29 +265,38 @@ public class MinionStatus : MonoBehaviour {
             //DestroyImmediate(collider);
             //Shot.Add(ATK);
         }
+        if (collider.gameObject.tag == "playermob")
+        {
+            //state = State.Waiting;
+        }
     }
     public void rangeTriggerEnter(Collider collider)
     {
-        Debug.Log("hanni");
+        state = State.Attacking;
     }
-    public void SetAttackTarget(Transform target)
+    public void SetAttackTarget()
     {
-        //RaycastHit hit;
+        RaycastHit hit;
 
-        //if (Physics.Raycast(transform.position, Vector3.right, out hit, 10))
-        //{
-        //    if(hit.collider.tag == "Enemy")
-        //    {
-        //        state = State.Attacking;
-        //    }
-        // Target=null;
-        //}
+        if (Physics.Raycast(transform.position, Vector3.right, out hit, 10))
+        {
+            if (hit.collider.GetComponent<enemy>())
+            {
+                Target =this.gameObject.transform;
+                state = State.Attacking;
+                return;
+            }
+            else
+            {
+                Target = null;
+            }
+        }
 
     }
     private IEnumerator SHOT(float Interval)
     {
-        GameObject b = Instantiate(bullet, transform.position, transform.rotation) as GameObject;
-        //b.GetComponent<Bullet>().target = target;
+        GameObject b = (GameObject)Instantiate(bullet,transform.position,transform.rotation);
+        b.GetComponent<bullet>().target = Target;
         yield return new WaitForSeconds(Interval);
     }
 /// <summary>

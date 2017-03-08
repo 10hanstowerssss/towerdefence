@@ -18,6 +18,9 @@ public class RANGe : MonoBehaviour {
     }
     void OnTriggerEnter(Collider collider)
     {
-        //status.rangeTriggerEnter(collider);
+        if (collider.gameObject.tag == "Enemy")
+        {
+            status.rangeTriggerEnter(collider);
+        }
     }
 }
