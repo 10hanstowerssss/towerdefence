@@ -40,7 +40,7 @@ public class Control : MonoBehaviour
     void Start()
     {
         //DontDestroyOnLoad(gameObject);
-        _money = 20;
+        _money = 20 ;
         _plusmoney = 1;
         _TacticsGauge = 30;
         texted.text = "資金: 0";
